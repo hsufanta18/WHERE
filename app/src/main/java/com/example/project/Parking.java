@@ -273,8 +273,9 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
 
             String tag;
 
-            xpp.next();
+            //xpp.next();
             int eventType = xpp.getEventType();
+
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
@@ -339,7 +340,8 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
                         break;
                     case XmlPullParser.END_TAG:
                         tag = xpp.getName(); //테그 이름 얻어오기
-                        if (tag.equals("item")) buffer.append("\n");// 첫번째 검색결과종료 줄바꿈
+                        if (tag.equals("item"))
+                            buffer.append("\n");// 첫번째 검색결과종료 줄바꿈
                         break;
                 }
                 eventType = xpp.next();
