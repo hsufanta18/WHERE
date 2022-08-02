@@ -72,7 +72,9 @@ public class Washing extends AppCompatActivity implements OnMapReadyCallback,Ove
     String[] lnmadr = new String[20000]; // 세차장 주소
     String[] phoneN = new String[20000]; // 세차장 전화번호
     Marker[] markers = new Marker[20000];
+
     int count = 0;
+
     private FusedLocationSource mLocationSource;
     private NaverMap mNaverMap;
     private long backKeyPressedTime = 0;

@@ -25,7 +25,7 @@
             android:layout_below="@id/zz"
             android:layout_alignParentTop="false"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <com.naver.maps.map.widget.ZoomControlView
             android:id="@+id/zoom"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/location"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <com.naver.maps.map.widget.CompassView
             android:id="@+id/compass"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/zoom"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <com.naver.maps.map.widget.ScaleBarView
             android:id="@+id/scalebar"
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/compass"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp" />
 
         <LinearLayout
             android:id="@+id/aa"
@@ -109,9 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_above="@id/aa"
-            android:orientation="vertical"
-            android:background="@drawable/gradient">
-        </LinearLayout>
+            android:background="@drawable/gradient"
+            android:orientation="vertical"></LinearLayout>
 
         <Button
             android:id="@+id/infomation"

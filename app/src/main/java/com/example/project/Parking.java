@@ -59,12 +59,14 @@ import java.net.URL;
 import java.util.List;
 
 public class Parking extends AppCompatActivity implements OnMapReadyCallback,Overlay.OnClickListener {
+
     private static final String TAG = "Parking";
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static final String[] PERMISSIONS = {
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
     };
+
     StringBuffer buffer = new StringBuffer();
     String[] str_parking_name = new String[20000]; //주차장 명
     String[] str_latitude = new String[20000]; //주차장 위도
@@ -83,16 +85,24 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
     String[] str_month_charge = new String[20000]; //월정기권 요금
     Marker[] markers = new Marker[20000];
     String[] str_charge_info = new String[20000]; // 주차장 유료 무료
+
     int count = 0;
+
     private FusedLocationSource mLocationSource;
     private NaverMap mNaverMap;
+
     private long backKeyPressedTime = 0;
+
     private Toast toast;
     private Button camera_btn;
     ProgressDialog progressDialog;
+
     com.naver.maps.map.overlay.InfoWindow InfoWindow;
+
     double lat, lon;  // 위도 경도
+
     int SearchMarkerIndex = 0; //마커클릭시 비교 숫자
+
     int int_nav_map_index; // 길찾기 선택 시 네이버맵 or 카카오맵 선택을 넘겨주기 위한 인덱스
     int int_markNumber = 0;
     int int_kind;
@@ -225,6 +235,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
         final EditText et3 = (EditText) findViewById(R.id.address_input);
 
         final Geocoder geocoder = new Geocoder(this); //
+
         b4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,8 +261,6 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
                                 new LatLng(lat, lon), 15)
                                 .animate(CameraAnimation.Fly, 3000);
                         naverMap.moveCamera(cameraUpdate);
-
-
                     }
                 }
 
@@ -274,6 +283,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
             String tag;
 
             xpp.next();
+
             int eventType = xpp.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 switch (eventType) {
@@ -470,7 +480,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
         @Override
         protected Boolean doInBackground(Void... strings) {
 
-            getXmlData(0);// 파싱 실행
+            getXmlData(0); //파싱 실행
             return true;
         }
 
@@ -484,7 +494,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
         protected void onPostExecute(Boolean s) {// 초기 무료 마커 설정
             super.onPostExecute(s);
             for (int i = 0; i < count; i++) {
-                if (str_parking_name[i] == null || str_longtitude[i] == null || str_latitude[i] == null || str_opendate[i] == null|| str_charge_info[i].equals("유료")|| str_charge_info[i].equals("혼합")|| str_address[i] == null|| str_telnum[i] == null|| str_parking_num[i] == null||str_parking_name[i].equals("여수지사주차장")|| str_telnum[i].equals("031-481-6316")) {
+                if (str_parking_name[i] == null || str_longtitude[i] == null || str_latitude[i] == null || str_opendate[i] == null|| str_charge_info[i].equals("유료")|| str_charge_info[i].equals("혼합")|| str_address[i] == null|| str_telnum[i] == null|| str_parking_num[i] == null) {
                     continue;
                 }
                 markers[int_markNumber] = new Marker();
@@ -518,7 +528,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
         int_markNumber = 0;
         if (s == 0) {// 값이 무료일 경우
             for (int i = 0; i < count; i++) {
-                if (str_parking_name[i] == null || str_longtitude[i] == null || str_latitude[i] == null || str_opendate[i] == null|| str_charge_info[i].equals("유료")|| str_charge_info[i].equals("혼합")|| str_address[i] == null|| str_telnum[i] == null|| str_parking_num[i] == null||str_parking_name[i].equals("여수지사주차장")|| str_telnum[i].equals("031-481-6316")) {
+                if (str_parking_name[i] == null || str_longtitude[i] == null || str_latitude[i] == null || str_opendate[i] == null|| str_charge_info[i].equals("유료")|| str_charge_info[i].equals("혼합")|| str_address[i] == null|| str_telnum[i] == null|| str_parking_num[i] == null) {
                     continue;
                 }
                 markers[int_markNumber] = new Marker();
