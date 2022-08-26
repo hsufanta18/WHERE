@@ -6,12 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class Title extends AppCompatActivity {
@@ -46,6 +42,14 @@ public class Title extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Title.this, GasStation.class);
+                startActivity(intent);
+            }
+        });
+        LinearLayout button4 = findViewById(R.id.화장실);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Title.this, Toilet.class);
                 startActivity(intent);
             }
         });
