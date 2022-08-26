@@ -4,10 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/drawable-v24/ic_parking.xml" value="0.135" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/activity_title.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/drawable/main.xml" value="0.2055" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/drawable/shape.xml" value="0.2055" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/activity_splash.xml" value="0.3605128205128205" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/activity_title.xml" value="0.264" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/gas_main.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/gascolor.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/item1.xml" value="0.24974358974358973" />
         <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/parking_main.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/sample.xml" value="0.3651041666666667" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/Project1/app/src/main/res/layout/toilet_main.xml" value="0.4" />
       </map>
     </option>
   </component>

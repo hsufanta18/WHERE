@@ -287,6 +287,7 @@ public class Parking extends AppCompatActivity implements OnMapReadyCallback,Ove
 
                         if (tag.equals("item")) ;
                         else if (tag.equals("prkplceNm")) { //주차장 명
+                            Log.d(TAG,"PARSING");
                             xpp.next();
                             str_parking_name[count] = xpp.getText();
                         } else if (tag.equals("basicTime")) { //주차장 기본 시간

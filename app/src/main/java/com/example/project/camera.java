@@ -55,8 +55,8 @@ public class camera extends AppCompatActivity {
         TedPermission.with(getApplicationContext())
                 .setPermissionListener(permissionListener)
                 .setRationaleMessage("카메라 권한이 필요합니다.")
-                .setDeniedMessage("거부하셨습니다.")
                 .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                .setDeniedMessage("거부하셨습니다.")
                 .check();
 
 

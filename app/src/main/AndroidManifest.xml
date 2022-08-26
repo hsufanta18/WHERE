@@ -12,19 +12,20 @@
 
     <application
         android:allowBackup="true"
-        android:largeHeap="true"
         android:icon="@drawable/icon"
         android:label="WHERE"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project"
-        android:usesCleartextTraffic="true"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:usesCleartextTraffic="true">
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
-        <activity android:name=".splash"
+        <activity
+            android:name=".splash"
             android:configChanges="screenSize|orientation">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,17 +33,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Title"
-            android:configChanges="screenSize|orientation"/>
-        <activity android:name=".GasStation"
-            android:configChanges="screenSize|orientation"/>
-        <activity android:name=".Parking"
-            android:configChanges="screenSize|orientation"/>
-        <activity android:name=".camera"
-            android:configChanges="screenSize|orientation"/>
-        <activity android:name=".Washing"
-            android:configChanges="screenSize|orientation"/>
-
+        <activity
+            android:name=".Title"
+            android:configChanges="screenSize|orientation" />
+        <activity
+            android:name=".GasStation"
+            android:configChanges="screenSize|orientation" />
+        <activity
+            android:name=".Parking"
+            android:configChanges="screenSize|orientation" />
+        <activity
+            android:name=".camera"
+            android:configChanges="screenSize|orientation" />
+        <activity
+            android:name=".Washing"
+            android:configChanges="screenSize|orientation" />
+        <activity
+            android:name=".Toilet"
+            android:configChanges="screenSize|orientation" />
 
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -53,9 +61,10 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_TYPE"
             android:value="dmb857s2dz" />
+
         <provider
-            android:authorities="com.example.project"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.project"
             android:exported="false"
             android:grantUriPermissions="true">
 
