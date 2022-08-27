@@ -100,7 +100,7 @@
                 android:id="@+id/toilet_kind"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
-                android:entries="@array/kind" />
+                android:entries="@array/km" />
 
             <Button
                 android:id="@+id/toilet_check"

@@ -1,14 +1,18 @@
 package com.example.project;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -32,7 +36,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.Tm128;
 import com.naver.maps.map.CameraAnimation;
+import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -58,7 +64,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Overlay.OnClickListener {
+
+public class Toilet extends AppCompatActivity implements OnMapReadyCallback, Overlay.OnClickListener, NaverMap.OnLocationChangeListener {
     private static final String TAG = "Toilet";
     private static final int PERMISSION_REQUEST_CODE = 100;
     private static final String[] PERMISSIONS = {
@@ -73,6 +80,7 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
     String[] str_openTime = new String[35000];
     String[] str_toilet_latitude = new String[35000];
     String[] str_toilet_longitude = new String[35000];
+
     Marker[] markers = new Marker[35000];
 
 
@@ -92,9 +100,12 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
 
     int int_nav_map_index; // 길찾기 선택 시 네이버맵 or 카카오맵 선택을 넘겨주기 위한 인덱스
     int int_markNumber = 0;
-    int int_kind;
+    double km = 3.0;
+    double cur_lat, cur_lon;
+    GpsTracker gpsTracker;
+    Caculator distance_calculator;
 
-
+    double latitude, longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,18 +147,47 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
             }
         });
 
+        /*
+        gpsTracker = new GpsTracker(Toilet.this);
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+        LatLng latLng = new LatLng(latitude,longitude);
+        */
+
+
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location loc_Current = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        cur_lat = Math.round(loc_Current.getLatitude() * 1000000) / 1000000.0;
+        cur_lon = Math.round(loc_Current.getLongitude() * 1000000) / 1000000.0;
+
+
 
         MyToiletAsyncTask asyncTask = new MyToiletAsyncTask();
         asyncTask.execute();// 파싱 Task 실행
 
-        Spinner spinner2 = findViewById(R.id.kind); //무료,유료 구분하여 선택가능하도록 설정
+
+
+        Spinner spinner2 = findViewById(R.id.toilet_kind); //무료,유료 구분하여 선택가능하도록 설정
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 0) {
-                    int_kind = 0;
+                    km = 1.0;
                 } else if (position == 1) {
-                    int_kind = 1;
+                    km = 3.0;
+                }
+                else if (position == 2) {
+                    km = 5.0;
                 }
             }
 
@@ -157,11 +197,14 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
             }
         });
 
-        Button button = findViewById(R.id.check);
+        Button button = findViewById(R.id.toilet_check);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UpdateMarkers(int_kind);
+                CameraPosition cameraPosition = mNaverMap.getCameraPosition();
+                LatLng latlng = cameraPosition.target;
+                /*현재 시점 중앙의 위도 경도 얻어오는 메소드*/
+                UpdateMarkers(km, latlng.latitude, latlng.longitude);
             }
         });
 
@@ -261,7 +304,8 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
 
 
     private void getToiletXmlData(int q){
-        String queryUrl = "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=2oGAFASBFjG7%2Bea%2FJZLVo1vqgs8P%2FTw7alO5%2Bj3H4oBiIQaP%2FZxrcZEdlVTm3zKkHxg%2FhLsGYfnVBjAs6sLESA%3D%3D&pageNo=0&numOfRows=35000&type=xml";
+        String queryUrl = "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=oFru8nID4HAZhGu0xL5fuLoS5vaabK%2BNFkjmh74yjmdTYQTxnBtgtUinIAx8s%2BTXGOqiKsP43kXevatbZnl%2BZA%3D%3D&pageNo=0&numOfRows=35000&type=xml";
+
 
         try {
             URL url = new URL(queryUrl);//문자열로 된 요청 url을 URL 객체로 생성.
@@ -311,7 +355,6 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
                             count++;
                         }
 
-
                     case XmlPullParser.TEXT:
                         break;
                     case XmlPullParser.END_TAG:
@@ -342,6 +385,7 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
     }
 
 
+
     @Override
     public boolean onClick(@NonNull Overlay overlay) {
         if (overlay instanceof Marker) {
@@ -364,8 +408,8 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
                 InfoWindow.open(marker);
                 AlertDialog.Builder dlg = new AlertDialog.Builder(com.example.project.Toilet.this);
                 dlg.setTitle("상세정보"); //제목
-                dlg.setMessage("주소 : " + str_toilet_addr[SearchMarkerIndex] + "\n운영시간 : " + str_openTime[SearchMarkerIndex] + "\n이름 : " + str_toilet_name[SearchMarkerIndex] + "대");
 
+                dlg.setMessage("이름 : " + str_toilet_name[SearchMarkerIndex] + "\n주소 : " + str_toilet_addr[SearchMarkerIndex] + "\n운영시간 : " + str_openTime[SearchMarkerIndex] + "\n ");
 
                 dlg.setPositiveButton("길찾기", new DialogInterface.OnClickListener() {
                     @Override
@@ -425,6 +469,7 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
     }
 
 
+
     public void onBackPressed() { //종료방법 설정
         if (System.currentTimeMillis() > backKeyPressedTime + 2500) {
             backKeyPressedTime = System.currentTimeMillis();
@@ -441,7 +486,6 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
     }
 
     public class MyToiletAsyncTask extends AsyncTask<Void, Integer, Boolean> {
-
         @Override
         protected Boolean doInBackground(Void... strings) {
             getToiletXmlData(0);// 파싱 실행
@@ -457,21 +501,10 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
         @Override
         protected void onPostExecute(Boolean s) {// 초기 무료 마커 설정
             super.onPostExecute(s);
-            for (int i = 0; i < count; i++) {
-                if (str_toilet_name[i] == null || str_toilet_longitude[i] == null || str_toilet_latitude[i] == null || str_toilet_addr[i] == null) {
-                    continue;
-                }
-                markers[int_markNumber] = new Marker();
-                markers[int_markNumber].setPosition(new LatLng(Double.parseDouble(str_toilet_latitude[i]), Double.parseDouble(str_toilet_longitude[i])));
-                markers[int_markNumber].setHideCollidedMarkers(true);
-                markers[int_markNumber].setWidth(50);
-                markers[int_markNumber].setHeight(50);
-                markers[int_markNumber].setIcon(OverlayImage.fromResource(R.drawable.ic_parking));
-                markers[int_markNumber].setMap(mNaverMap);
-                markers[int_markNumber].setOnClickListener(com.example.project.Toilet.this);
-                int_markNumber++;
-            }
+
+            UpdateMarkers(5.0, cur_lat, cur_lon);
             progressDialog.dismiss();
+
         }
 
         @Override
@@ -485,13 +518,19 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
         }
     }
 
-    public void UpdateMarkers(int s) {// 무료,유료 마커 설정
+    public void UpdateMarkers(double std_distance, double now_lat, double now_lon) {// 무료,유료 마커 설정
         for (int i = 0; i < int_markNumber; i++) {
             markers[i].setMap(null);
         }// 마커 초기화
         int_markNumber = 0;
+
         for (int i = 0; i < count; i++) {
-            if (str_toilet_name[i] == null || str_toilet_longitude[i] == null || str_toilet_latitude[i] == null || str_toilet_addr[i] == null) {
+            if (str_toilet_name[i] == null || str_toilet_longitude[i] == null || str_toilet_latitude[i] == null || str_toilet_addr[i] == null|| str_openTime[i] == null) {
+                continue;
+            }
+
+
+            if (distance_calculator.distance(now_lat, now_lon, Double.parseDouble(str_toilet_latitude[i]), Double.parseDouble(str_toilet_longitude[i])) > std_distance) {
                 continue;
             }
             markers[int_markNumber] = new Marker();
@@ -506,5 +545,10 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback,Over
         }
     }
 
+    @Override
+    public void onLocationChange(@NonNull Location location) { // 현재위치 변경 시, 자동 호출 함수
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+    }
 
 }
