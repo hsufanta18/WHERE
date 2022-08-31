@@ -35,6 +35,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.geometry.Tm128;
 import com.naver.maps.map.CameraAnimation;
@@ -106,6 +107,7 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback, Ove
     Caculator distance_calculator;
 
     double latitude, longitude;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,28 +149,16 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback, Ove
             }
         });
 
-        /*
         gpsTracker = new GpsTracker(Toilet.this);
-        latitude = gpsTracker.getLatitude();
-        longitude = gpsTracker.getLongitude();
+        Location nowloc = gpsTracker.getLocation();
+        Log.d(TAG,"DATA: " + nowloc.getLongitude() + "\n " + nowloc.getLatitude());
         LatLng latLng = new LatLng(latitude,longitude);
-        */
+
+        cur_lat = nowloc.getLatitude();
+        cur_lon = nowloc.getLongitude();
 
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location loc_Current = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        cur_lat = Math.round(loc_Current.getLatitude() * 1000000) / 1000000.0;
-        cur_lon = Math.round(loc_Current.getLongitude() * 1000000) / 1000000.0;
+
 
 
 
@@ -304,7 +294,7 @@ public class Toilet extends AppCompatActivity implements OnMapReadyCallback, Ove
 
 
     private void getToiletXmlData(int q){
-        String queryUrl = "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=oFru8nID4HAZhGu0xL5fuLoS5vaabK%2BNFkjmh74yjmdTYQTxnBtgtUinIAx8s%2BTXGOqiKsP43kXevatbZnl%2BZA%3D%3D&pageNo=0&numOfRows=35000&type=xml";
+        String queryUrl = "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=2oGAFASBFjG7%2Bea%2FJZLVo1vqgs8P%2FTw7alO5%2Bj3H4oBiIQaP%2FZxrcZEdlVTm3zKkHxg%2FhLsGYfnVBjAs6sLESA%3D%3D&pageNo=0&numOfRows=35000&type=xml";
 
 
         try {

@@ -123,9 +123,10 @@
                         <ImageView
                             android:layout_width="120dp"
                             android:layout_height="90dp"
-                            android:background="@drawable/ic_carwash"
+                            android:background="@drawable/toilet"
                             android:textColor="#090909"
                             android:textSize="20sp"
+                            android:layout_marginTop="10dp"
                             app:backgroundTint="#FFFFFF"
                             app:backgroundTintMode="multiply" />
 

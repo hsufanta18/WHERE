@@ -50,7 +50,8 @@ public class GpsTracker extends Service implements LocationListener {
                 }
             }
         } catch (Exception e) {
-            Log.d("@@@", ""+e.toString()); } return location; }
+            Log.d("@@@", ""+e.toString()); }
+        return location; }
             public double getLatitude() {
         if(location != null) { latitude = location.getLatitude(); } return latitude; }
         public double getLongitude() {
